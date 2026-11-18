@@ -23,16 +23,14 @@ def process_documents(uploaded_files, chunk_size: int = 800, chunk_overlap: int 
         
         for page in pages:
             page.page_content = clean_text(page.page_content)
-            page.metadata["source_file"] = uploaded_file.name
+            all_documents.append(page)
             
-        all_documents.extend(pages)
         os.remove(temp_path)
 
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=chunk_size,
-        chunk_overlap=chunk_overlap,
-        separators=["\n\n", "\n", ".", "!", "?", " ", ""]
+        chunk_overlap=chunk_overlap
     )
-    
     chunks = text_splitter.split_documents(all_documents)
+    
     return chunks, len(all_documents)
